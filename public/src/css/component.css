@@ -1,4 +1,4 @@
-.panel {
+.popover {
   position: absolute;
   background: #fff;
   border: 1px solid #e1e1e7;
@@ -9,16 +9,150 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000; }
-  .panel li {
+  .popover li {
     cursor: pointer;
     padding: 5px 10px;
     font-size: 12px;
     text-indent: 5px;
     color: black; }
-    .panel li:hover {
+    .popover li:hover {
       background: #F9BF3B;
       color: white;
       font-weight: bold; }
 
-.panel-right {
+.popover-right {
   margin-left: -100px; }
+
+/**
+ * card style
+ */
+.card {
+  border-radius: 2px;
+  margin-bottom: 20px;
+  -webkit-user-select: none; }
+  .card.card-default {
+    background: #ffffff;
+    border-bottom: 2px solid #e1e1e7; }
+    .card.card-default .title {
+      position: relative;
+      padding: 5px 3px;
+      margin: 0 10px;
+      border-bottom: 1px solid #f1f1f5;
+      color: #e1e1e7; }
+      .card.card-default .title a.options {
+        cursor: pointer;
+        color: #e1e1e7;
+        transition: all 0.2s; }
+        .card.card-default .title a.options:hover, .card.card-default .title a.options.active {
+          color: #c1c1c7; }
+    .card.card-default .body {
+      -webkit-user-select: initial;
+      padding: 10px; }
+
+.card-container.rotateX {
+  position: relative;
+  perspective: 800px; }
+  .card-container.rotateX .card {
+    transform-style: preserve-3d;
+    transition: transform 0.5s; }
+    .card-container.rotateX .card .figure {
+      backface-visibility: hidden; }
+      .card-container.rotateX .card .figure.back {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        transform: rotateX(180deg);
+        background: #e74c3c;
+        color: white;
+        text-align: center;
+        display: table; }
+        .card-container.rotateX .card .figure.back .vert-center {
+          padding: 0 20px;
+          display: table-cell;
+          vertical-align: middle; }
+        .card-container.rotateX .card .figure.back h2 {
+          margin: 0; }
+    .card-container.rotateX .card.flip {
+      transform: rotateX(180deg); }
+      .card-container.rotateX .card.flip * {
+        backface-visibility: hidden; }
+
+.typeahead {
+  height: 0;
+  overflow: hidden;
+  padding: 1px 2px;
+  position: absolute;
+  opacity: 0;
+  transition: all 0.2s;
+  margin-top: 10px;
+  z-index: 999; }
+  .typeahead.block {
+    width: 100%; }
+  .typeahead.show {
+    opacity: 1;
+    margin-top: 0;
+    height: auto;
+    transition: all 0.2s; }
+  .typeahead ul.typeahead-list {
+    position: relative;
+    background: white;
+    display: block;
+    border: 1px solid #e1e1e7;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: default;
+    z-index: 1000; }
+    .typeahead ul.typeahead-list li {
+      cursor: pointer;
+      display: block;
+      padding: 0 12px;
+      height: 35px;
+      line-height: 35px; }
+      .typeahead ul.typeahead-list li span {
+        padding: 6px 0; }
+      .typeahead ul.typeahead-list li.active {
+        background: #F9BF3B;
+        color: white;
+        font-weight: bold; }
+
+.toolbar {
+  padding: 0 2px; }
+  .toolbar ul {
+    display: block;
+    cursor: default;
+    margin: 0;
+    border-bottom: 1px solid #f1f1f5; }
+    .toolbar ul:before, .toolbar ul:after {
+      clear: both;
+      display: block;
+      content: ''; }
+    .toolbar ul li {
+      display: block;
+      cursor: pointer;
+      float: left;
+      padding: 0;
+      width: 38px;
+      height: 38px;
+      line-height: 35px; }
+      .toolbar ul li button {
+        touch-action: manipulation;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        border: none;
+        background-image: none;
+        white-space: nowrap;
+        vertical-align: middle;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        background: transparent;
+        color: #ccc;
+        transition: all 0.2s; }
+        .toolbar ul li button:hover {
+          color: #555; }
+      .toolbar ul li:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }

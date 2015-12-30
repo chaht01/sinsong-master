@@ -47,10 +47,10 @@ app
                     </li>\
                 </ul>\
             </div>\
-            <div id="note" sin-note sin-hash="hash" contenteditable="true" ng-focus="finishHash()" ng-blur="finishHash(e)" ng-model="editor.value" autofocus>{{editor.value}}</div>\
-            <div sin-typeahead sin-hash="hash" class="typeahead" ng-class="{show:hash.constructed}">\
+            <div id="note" class="body" sin-note sin-hash="hash" contenteditable="true" ng-focus="finishHash()" ng-blur="finishHash(e)" ng-model="editor.value" autofocus>{{editor.value}}</div>\
+            <div sin-typeahead sin-hash="hash" class="typeahead block" ng-class="{show:hash.constructed}">\
             </div>\
-            <div class="bottom">\
+            <div class="footer">\
                 <button ng-click="pushTodo(editor.value)" ng-disabled="!editor.value">작성완료</button>또는 <span class="emphasize" ng-class="{disabled:!editor.value}"><span class="key">alt</span>+<span class="key">s</span></span>\
             </div>',
             link: function($scope, element, attrs) {
@@ -106,7 +106,7 @@ app
                 };
 
             },
-            template: '<ul class="hash-list">\
+            template: '<ul class="typeahead-list">\
                     <li ng-class="{active:$index==focusIndex}" ng-mouseover="hoverIndex($index)" ng-mousedown="submitByClick($index,$event)"\
                      ng-repeat="result in filteredResult"><span>{{result.name}}</span></li>\
                     <li ng-if="filteredResult.length==0">결과가 없습니다</li>\

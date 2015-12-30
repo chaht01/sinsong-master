@@ -1,116 +1,38 @@
-#editor {
-  position: relative;
-  background: white;
-  border-bottom: 2px solid #e1e1e7;
-  border-radius: 2px;
-  margin-bottom: 20px; }
-  #editor #note {
-    padding: 20px 10px; }
-  #editor [contenteditable="true"]:focus {
+#sin-editor {
+  position: relative; }
+
+.editor {
+  position: relative; }
+  .editor .body {
+    padding: 20px 10px;
+    min-height: 90px; }
+  .editor [contenteditable="true"]:focus {
     border: none;
     outline: none; }
-  #editor .typeahead {
-    width: 100%;
-    height: 0;
-    overflow: hidden;
-    padding: 1px 2px;
-    position: absolute;
-    opacity: 0;
-    transition: all 0.2s;
-    margin-top: 10px;
-    z-index: 1000; }
-    #editor .typeahead.show {
-      opacity: 1;
-      margin-top: 0;
-      height: auto;
-      transition: all 0.2s; }
-    #editor .typeahead ul.hash-list {
-      position: relative;
-      background: white;
-      display: block;
-      border: 1px solid #e1e1e7;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      cursor: default;
-      z-index: 1000; }
-      #editor .typeahead ul.hash-list li {
-        cursor: pointer;
-        display: block;
-        padding: 0 12px;
-        height: 35px;
-        line-height: 35px; }
-        #editor .typeahead ul.hash-list li span {
-          padding: 6px 0; }
-        #editor .typeahead ul.hash-list li.active {
-          background: #F9BF3B;
-          color: white;
-          font-weight: bold; }
-  #editor .toolbar {
-    padding: 0 2px;
-    background: white; }
-    #editor .toolbar ul {
-      display: block;
-      cursor: default;
-      margin: 0;
-      border-bottom: 1px solid #f1f1f5; }
-      #editor .toolbar ul:before, #editor .toolbar ul:after {
-        clear: both;
-        display: block;
-        content: ''; }
-      #editor .toolbar ul li {
-        display: block;
-        cursor: pointer;
-        float: left;
-        padding: 0;
-        width: 38px;
-        height: 38px;
-        line-height: 35px; }
-        #editor .toolbar ul li button {
-          touch-action: manipulation;
-          cursor: pointer;
-          -webkit-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
-          user-select: none;
-          border: none;
-          background-image: none;
-          white-space: nowrap;
-          vertical-align: middle;
-          width: 100%;
-          height: 100%;
-          text-align: center;
-          background: transparent;
-          color: #ccc;
-          transition: all 0.2s; }
-          #editor .toolbar ul li button:hover {
-            color: #555; }
-        #editor .toolbar ul li:hover {
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-          -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
-  #editor .bottom {
+  .editor .footer {
     padding: 5px 10px 8px 5px;
     text-align: right;
     color: #e1e1e1;
     font-size: 12px; }
-    #editor .bottom span {
+    .editor .footer span {
       font-size: 14px; }
-      #editor .bottom span.emphasize {
+      .editor .footer span.emphasize {
         color: #95A5A6;
         font-weight: bold;
         transition: all 0.2s; }
-        #editor .bottom span.emphasize .key {
+        .editor .footer span.emphasize .key {
           border: 1px solid #e1e1e1;
           border-radius: 2px;
           padding: 0px 2px;
           border-bottom: 2px solid #D2D7D3; }
-        #editor .bottom span.emphasize.disabled {
+        .editor .footer span.emphasize.disabled {
           color: #e1e1e1; }
-          #editor .bottom span.emphasize.disabled .key {
+          .editor .footer span.emphasize.disabled .key {
             border: 1px solid #eeeeee;
             border-radius: 2px;
             padding: 0px 2px;
             border-bottom: 2px solid #eeeeee; }
-    #editor .bottom button {
+    .editor .footer button {
       touch-action: manipulation;
       cursor: pointer;
       -webkit-user-select: none;
@@ -130,79 +52,22 @@
       transition: all 0.2s;
       border-bottom: 2px solid #95a5a6;
       margin: 0 5px; }
-      #editor .bottom button:hover {
+      .editor .footer button:hover {
         background: #95A5A6;
         color: white;
         content: "alt+s"; }
-      #editor .bottom button[disabled=disabled], #editor .bottom button:disabled {
+      .editor .footer button[disabled=disabled], .editor .footer button:disabled {
         cursor: default;
         background: #DADFE1;
         border-bottom: 2px solid #DADFE1; }
-        #editor .bottom button[disabled=disabled]:hover, #editor .bottom button:disabled:hover {
+        .editor .footer button[disabled=disabled]:hover, .editor .footer button:disabled:hover {
           color: #f1f1f1; }
-
-.list {
-  position: relative;
-  margin: 10px 0;
-  background: white;
-  border-bottom: 2px solid #eeeee1;
-  border-radius: 2px;
-  transition: all 0.2s;
-  -webkit-user-select: none; }
-  .list .title {
-    position: relative;
-    padding: 5px 3px;
-    margin: 0 10px;
-    border-bottom: 1px solid #f1f1f5;
-    color: #e1e1e7; }
-    .list .title a.options {
-      cursor: pointer;
-      color: #e1e1e7;
-      transition: all 0.2s; }
-      .list .title a.options:hover, .list .title a.options.active {
-        color: #c1c1c7; }
-  .list .body {
-    -webkit-user-select: initial;
-    padding: 10px; }
-
-.card-rotateX {
-  position: relative;
-  perspective: 800px; }
-  .card-rotateX .list {
-    transform-style: preserve-3d;
-    transition: transform 0.5s; }
-    .card-rotateX .list .figure {
-      backface-visibility: hidden; }
-      .card-rotateX .list .figure.back {
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        transform: rotateX(180deg);
-        background: #e74c3c;
-        color: white;
-        text-align: center;
-        display: table; }
-        .card-rotateX .list .figure.back .vert-center {
-          padding: 0 20px;
-          display: table-cell;
-          vertical-align: middle; }
-          .card-rotateX .list .figure.back .vert-center .glyphicons {
-            transition: all 0.2s;
-            cursor: pointer;
-            opacity: 0.5; }
-            .card-rotateX .list .figure.back .vert-center .glyphicons:hover {
-              opacity: 1; }
-        .card-rotateX .list .figure.back h2 {
-          margin: 0; }
-    .card-rotateX .list.flip {
-      transform: rotateX(180deg); }
-      .card-rotateX .list.flip * {
-        backface-visibility: hidden; }
 
 .hash-input {
   border: none;
   outline: none;
-  border-bottom: 2px solid #F9BF3B; }
+  border-bottom: 2px solid #F9BF3B;
+  line-height: 1.2; }
   .hash-input.readonly {
     padding: 1px 4px;
     background: #F9BF3B;
@@ -213,7 +78,7 @@
 #hash-form {
   display: inline-block; }
 
-.postcards .card {
+#sub .card {
   transform: rotate(-20deg) translate(-90px);
   transition: all 0.5s;
   background: white;
@@ -221,7 +86,7 @@
   opacity: 0;
   border-bottom: 2px solid #e1e1e7;
   border-radius: 2px; }
-  .postcards .card.flip {
+  #sub .card.flip {
     opacity: 1;
     transform: rotate(0deg) translate(0px); }
 

@@ -30,9 +30,9 @@ angular.module('certApp').controller('IndexCtrl', function($scope, $rootScope, R
             ]
         }
     ]
-    $scope.resetPanel = function(){
-        if($rootScope.rootPanel){
-            $rootScope.rootPanel.visible = false;
+    $scope.resetPopover = function(){
+        if($rootScope.rootPopover){
+            $rootScope.rootPopover.visible = false;
         }
     }
 })

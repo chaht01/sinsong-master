@@ -1,71 +1,78 @@
 'use strict';
 
 angular.module('certApp')
-    .controller('Tab1Ctrl', ['$scope', '$sce','$rootScope',
-        function($scope, $sce, $rootScope) {
-            $scope.todos = [];
-            $scope.submit = function(todo) {
-                $scope.todos.push({
-                        text: todo,
-                        trustText: $sce.trustAsHtml(todo),
-                        done: false
-                    });
-            };
+.controller('Tab1Ctrl', ['$scope', '$sce','$rootScope',
+    function($scope, $sce, $rootScope) {
+        $scope.todos = [];
+        $scope.submit = function(todo) {
+            $scope.todos.push({
+                text: todo,
+                trustText: $sce.trustAsHtml(todo),
+                done: false
+            });
+        };
 
-            $scope.panel = {
-                visible :false,
-                x:0,
-                y:0,
-                model:null,
-                event:null
-            }
-            $scope.card = {
-                visible:false,
-                model:null
-            }
-            $scope.deleteNews = function(){
-                $scope.panel.visible = false;
-                var res, curr = $scope.panel.event.currentTarget, flag = false;
-                while(!flag){
-                    res = curr.className.split(" ");
-                    for (var i=0; i<res.length; i++){
-                        if(res[i] == 'card-rotateX'){
-                            flag = true;
-                            break;
-                        }
+        $scope.popover = {
+            visible :false,
+            x:0,
+            y:0,
+            model:null,
+            event:null
+        }
+        $scope.card = {
+            visible:false,
+            model:null
+        }
+
+
+        /**
+         * delete news related functions
+         * delete & undo
+         */
+        $scope.deleteNews = function(){
+            $scope.popover.visible = false;
+            var res, curr = $scope.popover.event.currentTarget, flag = false;
+            var targetClass = "rotateX"
+            while(!flag){
+                res = curr.className.split(" ");
+                for (var i=0; i<res.length; i++){
+                    if(res[i] == targetClass){
+                        flag = true;
+                        break;
                     }
-                    if(!flag)
-                        curr = curr.parentNode;
                 }
-                $(curr).find(".figure.back").width(curr.offsetWidth);
-                $(curr).find(".figure.back").height(curr.offsetHeight);
-                $scope.panel.model.readyToDelete = true;
+                if(!flag)
+                    curr = curr.parentNode;
             }
-            $scope.undoDelete = function(todo){
-                todo.readyToDelete = false;
-            }
-            $scope.panelToggle = function($event,todo){
-                $event.stopPropagation();
-                $event.preventDefault();
-                $rootScope.rootPanel = $scope.panel;
-                if(todo==$scope.panel.model){
-                    $scope.panel.visible = !$scope.panel.visible;
-                }else{
-                    $scope.panel.model = todo;
-                    $scope.panel.event = $event;
-                    $scope.panel.visible = true;
-                    $scope.panel.x=$($event.currentTarget).offset().left+$($event.currentTarget).width();
-                    $scope.panel.y=$($event.currentTarget).offset().top+$($event.currentTarget).height();
-                }
+            $(curr).find(".figure.back").width(curr.offsetWidth);
+            $(curr).find(".figure.back").height(curr.offsetHeight);
+            $scope.popover.model.readyToDelete = true;
+        }
+        $scope.undoDelete = function(todo){
+            todo.readyToDelete = false;
+        }
+        $scope.popoverToggle = function($event,todo){
+            $event.stopPropagation();
+            $event.preventDefault();
+            $rootScope.rootPopover = $scope.popover;
+            if(todo==$scope.popover.model){
+                $scope.popover.visible = !$scope.popover.visible;
+            }else{
+                $scope.popover.model = todo;
+                $scope.popover.event = $event;
+                $scope.popover.visible = true;
+                $scope.popover.x = $($event.currentTarget).offset().left+$($event.currentTarget).width();
+                $scope.popover.y = $($event.currentTarget).offset().top+$($event.currentTarget).height();
             }
         }
+    }
     ]);
 
 /**
  * dom element를 현재 cursor caret 위치에 삽입
  * @param  {node}
  */
-function insertNodeAtCursor(node) {
+ function insertNodeAtCursor(node) {
     var sel, range, node;
     if (window.getSelection) {
         sel = window.getSelection();
@@ -87,7 +94,7 @@ function insertNodeAtCursor(node) {
  * plain text를 현재 cursor caret 위치에 삽입
  * @param  {text}
  */
-function insertTextAtCursor(text) {
+ function insertTextAtCursor(text) {
     var sel, range, html;
     sel = window.getSelection();
     range = sel.getRangeAt(0);
@@ -131,12 +138,12 @@ function saveSelection(containerEl) {
 function restortSelection(containerEl, savedSel) {
     if (window.getSelection && document.createRange) {
         var charIndex = 0,
-            range = document.createRange();
+        range = document.createRange();
         range.setStart(containerEl, 0);
         range.collapse(true);
         var nodeStack = [containerEl],
-            node, foundStart = false,
-            stop = false;
+        node, foundStart = false,
+        stop = false;
 
         while (!stop && (node = nodeStack.pop())) {
             if (node.nodeType == 3) {

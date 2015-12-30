@@ -25,13 +25,13 @@ body {
   height: 100%;
   padding: 50px 0 0 0;
   background: #f1f1f1; }
-  #content-area > .pages {
+  #content-area > #main {
     position: relative;
     width: 600px;
     margin: 20px 40px;
     float: right;
     -webkit-user-select: none; }
-  #content-area > .postcards {
+  #content-area > #sub {
     float: left;
     width: calc(100% - 720px);
     margin-top: 20px;

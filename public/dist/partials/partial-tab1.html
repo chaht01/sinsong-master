@@ -1,18 +1,18 @@
-<ul class="panel shadow panel-right" ng-if="panel.visible" ng-style="{'left':panel.x, 'top':panel.y}">
+<ul class="popover shadow popover-right" ng-if="popover.visible" ng-style="{'left':popover.x, 'top':popover.y}">
     <li ng-click="card.visible=true">수정</li>
     <li ng-click="deleteNews()">삭제</li>
 </ul>
-<div class="postcards">
-    <div class="card" ng-class="{'flip':card.visible}"></div>
+<div id="sub">
+    <div class="editor card card-default" ng-class="{'flip':card.visible}" sin-editor></div>
 </div>
-<div class="pages">
-	<div id="editor" sin-editor sin-submit="submit(todo)"></div>
-    <article class="card-rotateX" ng-repeat="todo in todos | reverse">
-        <div class="list" ng-class="{'flip':todo.readyToDelete}">
+<div id="main">
+	<div id="sin-editor" class="editor card card-default" sin-editor sin-submit="submit(todo)"></div>
+    <article class="card-container rotateX" ng-repeat="todo in todos | reverse">
+        <div class="card card-default" ng-class="{'flip':todo.readyToDelete}">
             <div class="figure">
                 <div class="title">
                     <span>{{$index}}</span>
-                    <a class="options pull-right" ng-click="panelToggle($event,todo)">
+                    <a class="options pull-right" ng-click="popoverToggle($event,todo)">
                         <span class="glyphicons glyphicons-more"></span>
                     </a>
                 </div>
@@ -20,10 +20,10 @@
             </div>
             <div class="figure back">
                 <div class="vert-center">
-                    <span class="pull-right glyphicons glyphicons-remove-2" ng-click="undoDelete(todo)"></span>
+                    <a class="close btn" ng-click="undoDelete(todo)"></a>
                     <span>정말 삭제 하시겠어요?</span>
                     <div class="txt-center">
-                        <h2 class="glyphicons glyphicons-ok-2"></h2>
+                        <a class="btn"><h2 class="glyphicons glyphicons-ok-2"></h2></a>
                     </div>
                 </div>
             </div>
