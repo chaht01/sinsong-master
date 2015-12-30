@@ -1,0 +1,13 @@
+#note {
+  padding: 20px 10px;
+  background: white;
+  line-height: 30px; }
+
+[contenteditable="true"]:focus {
+  border: none;
+  outline: none; }
+
+.list {
+  margin: 10px 0;
+  background: white;
+  padding: 10px; }

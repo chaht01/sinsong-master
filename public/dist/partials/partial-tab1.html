@@ -1,0 +1,50 @@
+<ul class="panel shadow panel-right" ng-if="panel.visible" ng-style="{'left':panel.x, 'top':panel.y}">
+    <li ng-click="card.visible=true">수정</li>
+    <li ng-click="deleteNews()">삭제</li>
+</ul>
+<div class="postcards">
+    <div class="card" ng-class="{'flip':card.visible}"></div>
+</div>
+<div class="pages">
+	<div id="editor" sin-editor sin-submit="submit(todo)"></div>
+    <article class="card-rotateX" ng-repeat="todo in todos | reverse">
+        <div class="list" ng-class="{'flip':todo.readyToDelete}">
+            <div class="figure">
+                <div class="title">
+                    <span>{{$index}}</span>
+                    <a class="options pull-right" ng-click="panelToggle($event,todo)">
+                        <span class="glyphicons glyphicons-more"></span>
+                    </a>
+                </div>
+                <div class="body" ng-bind-html="todo.trustText"></div>
+            </div>
+            <div class="figure back">
+                <div class="vert-center">
+                    <span class="pull-right glyphicons glyphicons-remove-2" ng-click="undoDelete(todo)"></span>
+                    <span>정말 삭제 하시겠어요?</span>
+                    <div class="txt-center">
+                        <h2 class="glyphicons glyphicons-ok-2"></h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+	<!--  Drop File:
+    <div ngf-drop ngf-select ng-model="files" class="drop-box" 
+        ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true"
+        accept="image/*,application/pdf" 
+        ngf-pattern="'image/*,application/pdf'">Drop pdfs or images here or click to upload</div>
+    Files:
+    <ul>
+        <li ng-repeat="f in files" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}</li>
+    </ul>
+    Upload Log:
+    <pre>{{log}}</pre>
+    <img ngf-src="!files[0].$error && files[0]"> -->
+
+
+    <!-- <input ng-model="text.value" style="width: 400px;"> -->
+    <!-- <input ng-model="hash.typed"> -->
+    <!-- http://jsfiddle.net/MWe8U/ -->
+    <!-- http://jsfiddle.net/lsiv568/fsfPe/10/ -->
+</div>

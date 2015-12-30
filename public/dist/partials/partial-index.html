@@ -1,0 +1,9 @@
+
+<div id="header">
+	<div class="global-width margin-auto">
+		<ul ng-repeat="header in sidebarObjects">
+			<li ng-repeat="button in header.buttons" ng-click="link_provider.navigate(section, button.link)">{{button.name}}</li>
+		</ul>
+	</div>
+</div>
+<div id="content-area" app-view-segment="1"></div>

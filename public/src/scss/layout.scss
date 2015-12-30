@@ -1,0 +1,44 @@
+body{
+	background :#f1f1f1;
+}
+#header{
+	position: fixed;
+	top :0;
+	left:0;
+	background: #e74c3c;
+	width: 100%;
+	height: 50px;
+	color: white;
+	box-sizing: border-box;
+	padding: 5px 10px;
+	line-height : 30px;
+	z-index:1000;
+	ul{
+		float: right;
+		li{
+			display: block;
+			float:left;
+			line-height: 30px;
+			margin: 0px 10px;
+		}
+	}
+}
+#content-area{
+	height: 100%;
+	padding:50px 0 0 0;
+	background: #f1f1f1;
+	>.pages{
+		position:relative;
+		width: 600px;
+		margin: 20px 40px;
+		float: right;
+		-webkit-user-select: none;
+	}
+	>.postcards{
+		float: left;
+		width: calc(100% - 720px);
+		margin-top: 20px;
+		margin-left: 40px;
+	}
+}
+
