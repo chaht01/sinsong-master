@@ -12,7 +12,7 @@ app
             type: "=type",
             value: "=value"
         },
-        controller: function($scope, $sce, Toolbar) {
+        controller: function($scope, $sce) {
             $scope.users = [];
             $scope.editor;
             $scope.hash = {
@@ -23,14 +23,13 @@ app
                     inCaret: false,
                     hashing: false
                 };
-                $scope.toolbar = Toolbar.get();
 
                 initEditor();
 
                 function initEditor() {
                     var value;
                     if($scope.value){
-                        value = $scope.value.text
+                        value = '<div class="dummy">'+$scope.value.text+'</div>';
                     }
                     $scope.editor = {
                         caret: {},
@@ -39,31 +38,25 @@ app
                     };
                 }
                 $scope.pushTodo = function(value) {
+                    var text;
+                    if($(value).hasClass('dummy')){
+                        text = $(value).html()
+                    }else{
+                        text = value;
+                    }
                     var obj = {
-                        todo: value // the key name 'todo' must sync with directive's 
+                        todo: text // the key name 'todo' must sync with directive's 
                             //attirbute parameter of function 'submit'.
                         }
                         $scope.submit(obj);
                         initEditor();
                     }
-                    console.log($scope.value)
                 },
                 template: function($scope){
                     var footer;
-                    footer = '<button '+$scope.type+'  ng-click="pushTodo(editor.value)" ng-disabled="!editor.value">작성완료</button>또는 <span class="emphasize" ng-class="{disabled:!editor.value}"><span class="key">alt</span>+<span class="key">s</span></span>'
-                    return '<div class="toolbar">\
-                    <ul>\
-                    <li ng-repeat="option in toolbar">\
-                    <button ng-click="option.func()"><span class="{{option.icon}}"></span></button>\
-                    </li>\
-                    </ul>\
-                    </div>\
-                    <div id="note" class="body" sin-note sin-hash="hash" contenteditable="true" ng-focus="finishHash()" ng-blur="finishHash(e)" ng-model="editor.value" autofocus>{{editor.value}}</div>\
+                    footer = '<button ng-click="pushTodo(editor.value)" ng-disabled="!editor.value">작성완료</button>또는 <span class="emphasize" ng-class="{disabled:!editor.value}"><span class="key">alt</span>+<span class="key">s</span></span>'
+                    return '<div id="note" class="body" sin-note sin-hash="hash" contenteditable="true" ng-focus="finishHash()" ng-blur="finishHash(e)" ng-model="editor.value" autofocus>{{editor.value}}</div>\
                     <div sin-typeahead sin-hash="hash" class="typeahead block" ng-class="{show:hash.constructed}">\
-                    </div>\
-                    <div class="footer" ng-hide="!footer" ng-switch="type">\
-                    <div ng-switch-when=""><button ng-click="pushTodo(editor.value)" ng-disabled="!editor.value">작성완료</button>또는 <span class="emphasize" ng-class="{disabled:!editor.value}"><span class="key">alt</span>+<span class="key">s</span></span></div>\
-                    <div ng-switch-when="edit"><a class="btn"><h2 class="glyphicons glyphicons-ok-2"></h2></a></div>\
                     </div>'
                 },
                 link: function($scope, element, attrs) {
@@ -71,10 +64,13 @@ app
                     var editor = element.find("#note");
 
                     editor.bind('keydown', 'alt+s', function(event) {
+                        // $scope.editor.value = element.html();
                         $scope.pushTodo($scope.editor.value);
+                        // $scope.editor.value = '';
+                        // initEditor();
                         event.preventDefault();
                     })
-                    editor.focus();
+                    //editor.focus();
                 }
             };
         })
@@ -148,7 +144,7 @@ app
         }
     }
 })
-.directive("sinNote", function($compile, $timeout) {
+.directive("sinNote", function($compile, $timeout, $sce) {
     return {
         restrict: "A",
         require: "ngModel",
@@ -167,7 +163,7 @@ app
             }
 
             ngModel.$render = function() {
-                element.html(ngModel.$viewValue || "");
+                element.html($sce.getTrustedHtml(ngModel.$viewValue || ""));
             };
 
             var
@@ -178,7 +174,8 @@ app
 
             editor
             .bind("blur keyup change", function() {
-                $scope.$apply(read);
+                // $scope.$apply(read);
+                $scope.$evalAsync(read)
             })
             .bind('keydown', 'shift+2', function(event) {
                 if (!$scope.hash.constructed) {

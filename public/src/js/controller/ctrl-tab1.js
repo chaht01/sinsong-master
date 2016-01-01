@@ -1,15 +1,19 @@
 'use strict';
 
 angular.module('certApp')
-.controller('Tab1Ctrl', ['$scope', '$sce','$rootScope',
-    function($scope, $sce, $rootScope) {
-        $scope.todos = [];
+.controller('Tab1Ctrl', ['$scope', '$sce','$rootScope','News',
+    function($scope, $sce, $rootScope, News) {
+
+        $scope.todos = News.get();
+        angular.forEach($scope.todos, function(todo, key){
+            todo.trustText = $sce.trustAsHtml(todo.text)
+        });
         $scope.editList =[];
         $scope.submit = function(todo) {
             $scope.todos.push({
                 text: todo,
                 trustText: $sce.trustAsHtml(todo),
-                done: false
+                edit:false
             });
         };
 
@@ -75,7 +79,7 @@ angular.module('certApp')
         
         $scope.editNews = function(){
             $scope.popover.model.edit = true;
-            $scope.editList.push($scope.popover.model);
+            // $scope.editList.push($scope.popover.model);
         }
      }
      ]);
