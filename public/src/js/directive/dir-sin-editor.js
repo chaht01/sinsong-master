@@ -38,14 +38,15 @@ app
                     };
                 }
                 $scope.pushTodo = function(value) {
-                    var text;
-                    if($(value).hasClass('dummy')){
-                        text = $(value).html()
-                    }else{
-                        text = value;
-                    }
+                    // var text;
+                    // if($(value).hasClass('dummy')){
+                    //     text = $(value).html()
+                    // }else{
+                    //     text = value;
+                    // }
+                    console.log(value)
                     var obj = {
-                        todo: text // the key name 'todo' must sync with directive's 
+                        todo: value // the key name 'todo' must sync with directive's 
                             //attirbute parameter of function 'submit'.
                         }
                         $scope.submit(obj);
@@ -64,10 +65,7 @@ app
                     var editor = element.find("#note");
 
                     editor.bind('keydown', 'alt+s', function(event) {
-                        // $scope.editor.value = element.html();
                         $scope.pushTodo($scope.editor.value);
-                        // $scope.editor.value = '';
-                        // initEditor();
                         event.preventDefault();
                     })
                     //editor.focus();
@@ -163,7 +161,8 @@ app
             }
 
             ngModel.$render = function() {
-                element.html($sce.getTrustedHtml(ngModel.$viewValue || ""));
+                // element.html($sce.getTrustedHtml(ngModel.$viewValue || ""));
+                element.html(ngModel.$viewValue || "");
             };
 
             var
@@ -174,8 +173,8 @@ app
 
             editor
             .bind("blur keyup change", function() {
-                // $scope.$apply(read);
-                $scope.$evalAsync(read)
+                $scope.$apply(read);
+                // $scope.$evalAsync(read)
             })
             .bind('keydown', 'shift+2', function(event) {
                 if (!$scope.hash.constructed) {
