@@ -1,18 +1,18 @@
 <ul class="popover shadow popover-right" ng-if="popover.visible" ng-style="{'left':popover.x, 'top':popover.y}">
-    <li ng-click="card.visible=true">수정</li>
+    <li ng-click="editNews()">수정</li>
     <li ng-click="deleteNews()">삭제</li>
 </ul>
 <div id="sub">
-    <div class="editor card card-default" ng-class="{'flip':card.visible}" sin-editor></div>
+    <div class="editor card card-default" ng-repeat="card in editList" ng-animate="{enter:'animate-enter'}" sin-editor footer="true" type="'edit'" value="card"></div>
 </div>
 <div id="main">
-	<div id="sin-editor" class="editor card card-default" sin-editor sin-submit="submit(todo)"></div>
+	<div id="sin-editor" class="editor card card-default" sin-editor sin-submit="submit(todo)" footer="true"></div>
     <article class="card-container rotateX" ng-repeat="todo in todos | reverse">
-        <div class="card card-default" ng-class="{'flip':todo.readyToDelete}">
+        <div class="card card-default" ng-class="{'flip':todo.readyToDelete, 'card-in-action':todo.edit}">
             <div class="figure">
                 <div class="title">
                     <span>{{$index}}</span>
-                    <a class="options pull-right" ng-click="popoverToggle($event,todo)">
+                    <a class="options pull-right" ng-if="!todo.edit" ng-click="popoverToggle($event,todo)">
                         <span class="glyphicons glyphicons-more"></span>
                     </a>
                 </div>

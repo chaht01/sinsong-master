@@ -29,7 +29,9 @@
 .card {
   border-radius: 2px;
   margin-bottom: 20px;
-  -webkit-user-select: none; }
+  -webkit-user-select: none;
+  border-left: 0px solid transparent;
+  transition: all 0.2s; }
   .card.card-default {
     background: #ffffff;
     border-bottom: 2px solid #e1e1e7; }
@@ -48,6 +50,8 @@
     .card.card-default .body {
       -webkit-user-select: initial;
       padding: 10px; }
+  .card.card-in-action {
+    border-left: 4px solid #F9BF3B; }
 
 .card-container.rotateX {
   position: relative;

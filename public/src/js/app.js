@@ -6,5 +6,6 @@ angular.module('certApp', [
     'route-segment',
     'view-segment',
     'ngSanitize',
-    'ngFileUpload'
+    'ngFileUpload',
+    'ngAnimate'
 ]);

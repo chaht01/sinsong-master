@@ -94,17 +94,20 @@
 }
 
 #sub{
-	.card{ 
-		transform: rotate(-20deg) translate(-90px);
-		transition : all .5s;
-		background: white;
+	.card{
+		background: #4B77BE;
 		min-height: 200px;
-		opacity : 0;
-		border-bottom: 2px solid #e1e1e7;
-		border-radius : 2px;
-		&.flip{
-			opacity:1;
-			transform: rotate(0deg) translate(0px);
+		
+		&.ng-enter{
+			transform: rotate(-20deg) translate(-90px);
+			transition : all .5s;
+			opacity : 0;
+			border-bottom: 2px solid #e1e1e7;
+			border-radius : 2px;
+			&.ng-enter-active{
+				opacity:1;
+				transform: rotate(0deg) translate(0px);
+			}
 		}
 	}
 }

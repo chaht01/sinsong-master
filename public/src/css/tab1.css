@@ -79,16 +79,17 @@
   display: inline-block; }
 
 #sub .card {
-  transform: rotate(-20deg) translate(-90px);
-  transition: all 0.5s;
-  background: white;
-  min-height: 200px;
-  opacity: 0;
-  border-bottom: 2px solid #e1e1e7;
-  border-radius: 2px; }
-  #sub .card.flip {
-    opacity: 1;
-    transform: rotate(0deg) translate(0px); }
+  background: #4B77BE;
+  min-height: 200px; }
+  #sub .card.ng-enter {
+    transform: rotate(-20deg) translate(-90px);
+    transition: all 0.5s;
+    opacity: 0;
+    border-bottom: 2px solid #e1e1e7;
+    border-radius: 2px; }
+    #sub .card.ng-enter.ng-enter-active {
+      opacity: 1;
+      transform: rotate(0deg) translate(0px); }
 
 /* file upload */
 .drop-box {

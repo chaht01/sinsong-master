@@ -4,6 +4,7 @@ angular.module('certApp')
 .controller('Tab1Ctrl', ['$scope', '$sce','$rootScope',
     function($scope, $sce, $rootScope) {
         $scope.todos = [];
+        $scope.editList =[];
         $scope.submit = function(todo) {
             $scope.todos.push({
                 text: todo,
@@ -24,12 +25,27 @@ angular.module('certApp')
             model:null
         }
 
+        $scope.popoverToggle = function($event,todo){
+            $event.stopPropagation();
+            $event.preventDefault();
+            $rootScope.rootPopover = $scope.popover;
+            if(todo==$scope.popover.model){
+                $scope.popover.visible = !$scope.popover.visible;
+            }else{
+                $scope.popover.model = todo;
+                $scope.popover.event = $event;
+                $scope.popover.visible = true;
+                $scope.popover.x = $($event.currentTarget).offset().left+$($event.currentTarget).width();
+                $scope.popover.y = $($event.currentTarget).offset().top+$($event.currentTarget).height();
+            }
+        }
+
 
         /**
          * delete news related functions
          * delete & undo
          */
-        $scope.deleteNews = function(){
+         $scope.deleteNews = function(){
             $scope.popover.visible = false;
             var res, curr = $scope.popover.event.currentTarget, flag = false;
             var targetClass = "rotateX"
@@ -51,22 +67,18 @@ angular.module('certApp')
         $scope.undoDelete = function(todo){
             todo.readyToDelete = false;
         }
-        $scope.popoverToggle = function($event,todo){
-            $event.stopPropagation();
-            $event.preventDefault();
-            $rootScope.rootPopover = $scope.popover;
-            if(todo==$scope.popover.model){
-                $scope.popover.visible = !$scope.popover.visible;
-            }else{
-                $scope.popover.model = todo;
-                $scope.popover.event = $event;
-                $scope.popover.visible = true;
-                $scope.popover.x = $($event.currentTarget).offset().left+$($event.currentTarget).width();
-                $scope.popover.y = $($event.currentTarget).offset().top+$($event.currentTarget).height();
-            }
+
+        /**
+         * edit news related function
+         * edit & confirm & undo
+         */
+        
+        $scope.editNews = function(){
+            $scope.popover.model.edit = true;
+            $scope.editList.push($scope.popover.model);
         }
-    }
-    ]);
+     }
+     ]);
 
 /**
  * dom element를 현재 cursor caret 위치에 삽입
