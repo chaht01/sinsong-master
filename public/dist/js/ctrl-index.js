@@ -23,7 +23,7 @@ angular.module('certApp').controller('IndexCtrl', function($scope, $rootScope, R
                     icon: 'glyphicon-stats'
                 },
                 {
-                    name: '=이주영 극혐',
+                    name: '≠이주영 극혐',
                     link: 'analysis-report',
                     icon: 'glyphicon-stats'
                 }

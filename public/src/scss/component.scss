@@ -39,6 +39,7 @@
  	transition : all .2s;
  	&.card-default{
  		background: #ffffff;
+ 		border: 1px solid #ebebf2;
  		border-bottom: 2px solid #e1e1e7;
  		.title{
  			position: relative;
@@ -59,8 +60,19 @@
  			-webkit-user-select: initial;
  			padding: 10px;
  			&::selection{
-			background:#fff2a8;
-		}
+ 				background:#fff2a8;
+ 			}
+ 			[contenteditable="true"]{
+ 				background : #fff2a8;
+ 				&:focus{
+ 					outline: none;
+ 					border: none;
+ 					background:none;
+ 				}
+ 				&::selection{
+ 					background:#fff2a8;
+ 				}
+ 			}
  		}
  	}
  	&.card-in-action{
@@ -116,6 +128,8 @@
  			}
  			&.flip{
  				transform: rotateX(180deg);
+ 				border-bottom: none;
+ 				border-top: 2px solid #de4a3a;
  				*{
  					backface-visibility: hidden;
  				}

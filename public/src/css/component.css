@@ -34,6 +34,7 @@
   transition: all 0.2s; }
   .card.card-default {
     background: #ffffff;
+    border: 1px solid #ebebf2;
     border-bottom: 2px solid #e1e1e7; }
     .card.card-default .title {
       position: relative;
@@ -52,6 +53,14 @@
       padding: 10px; }
       .card.card-default .body::selection {
         background: #fff2a8; }
+      .card.card-default .body [contenteditable="true"] {
+        background: #fff2a8; }
+        .card.card-default .body [contenteditable="true"]:focus {
+          outline: none;
+          border: none;
+          background: none; }
+        .card.card-default .body [contenteditable="true"]::selection {
+          background: #fff2a8; }
   .card.card-in-action {
     border-left: 4px solid #F9BF3B; }
   .card .tabbar {
@@ -92,7 +101,9 @@
         .card-container.rotateX .card .figure.back h2 {
           margin: 0; }
     .card-container.rotateX .card.flip {
-      transform: rotateX(180deg); }
+      transform: rotateX(180deg);
+      border-bottom: none;
+      border-top: 2px solid #de4a3a; }
       .card-container.rotateX .card.flip * {
         backface-visibility: hidden; }
 

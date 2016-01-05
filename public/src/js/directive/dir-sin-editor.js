@@ -3,7 +3,7 @@
 var app = angular.module('certApp');
 
 app
-.directive("sinEditor", function() {
+.directive("sinEditor", function($timeout) {
     return {
         restrict: "A",
         scope: {
@@ -24,13 +24,18 @@ app
                     hashing: false
                 };
 
+                var dummyNode  = '<span class="fn-dummy-safe"></span>';
                 initEditor();
 
                 function initEditor() {
                     var value;
                     if($scope.value){
-                        value = '<div class="dummy">'+$scope.value.text+'</div>';
+                        value = dummyNode + $scope.value.text;
+                    }else{
+                        value = dummyNode;
                     }
+
+
                     $scope.editor = {
                         caret: {},
                         blured: false,
@@ -38,15 +43,10 @@ app
                     };
                 }
                 $scope.pushTodo = function(value) {
-                    // var text;
-                    // if($(value).hasClass('dummy')){
-                    //     text = $(value).html()
-                    // }else{
-                    //     text = value;
-                    // }
-                    console.log(value)
+                    var text;
+                    text = value.replace(dummyNode,'');
                     var obj = {
-                        todo: value // the key name 'todo' must sync with directive's 
+                        todo: text // the key name 'todo' must sync with directive's 
                             //attirbute parameter of function 'submit'.
                         }
                         $scope.submit(obj);
@@ -63,15 +63,35 @@ app
                 link: function($scope, element, attrs) {
 
                     var editor = element.find("#note");
-
                     editor.bind('keydown', 'alt+s', function(event) {
                         $scope.pushTodo($scope.editor.value);
                         event.preventDefault();
                     })
-                    //editor.focus();
+
+                    $timeout(function(){
+                        placeCaretAtEnd(editor[0]);                        
+                    })
+
+                    function placeCaretAtEnd(el) {
+                        el.focus();
+                        if (typeof window.getSelection != "undefined"
+                            && typeof document.createRange != "undefined") {
+                            var range = document.createRange();
+                        range.selectNodeContents(el);
+                        range.collapse(false);
+                        var sel = window.getSelection();
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    } else if (typeof document.body.createTextRange != "undefined") {
+                        var textRange = document.body.createTextRange();
+                        textRange.moveToElementText(el);
+                        textRange.collapse(false);
+                        textRange.select();
+                    }
                 }
-            };
-        })
+            }
+        };
+    })
 .directive("sinTypeahead", function($filter) {
     return {
         restrict: "A",
