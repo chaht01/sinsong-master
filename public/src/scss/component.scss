@@ -112,7 +112,8 @@
  					left:0;
  					bottom:0;
  					transform:rotateX(180deg);
- 					background:#e74c3c;
+// 					background:#e74c3c;
+					background: #F32D44;
  					color:white;
  					text-align: center;
  					display: table;
@@ -129,8 +130,7 @@
  			&.flip{
  				transform-style: preserve-3d;
  				transform: rotateX(180deg);
- 				border-bottom: none;
- 				border-top: 2px solid #de4a3a;
+// 				border-bottom-color:#F32D44;
  				*{
  					backface-visibility: hidden;
  				}
@@ -232,11 +232,5 @@
  			-webkit-box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 
  		}
- 	}
- 	&.fold{
- 		width: calc(100% - 50px);
- 		height: 38px;
- 		overflow: hidden;
- 		border-right: 1px solid #ccc;
  	}
  }

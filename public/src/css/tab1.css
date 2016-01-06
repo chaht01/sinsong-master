@@ -55,11 +55,13 @@
         background: #95A5A6;
         color: white;
         content: "alt+s"; }
-      .editor .footer button[disabled=disabled], .editor .footer button:disabled {
+      .editor .footer button[disabled=disabled],
+      .editor .footer button:disabled {
         cursor: default;
         background: #DADFE1;
         border-bottom: 2px solid #DADFE1; }
-        .editor .footer button[disabled=disabled]:hover, .editor .footer button:disabled:hover {
+        .editor .footer button[disabled=disabled]:hover,
+        .editor .footer button:disabled:hover {
           color: #f1f1f1; }
 
 .hash-input {
@@ -72,7 +74,8 @@
     background: #F9BF3B;
     color: white;
     border-radius: 2px;
-    margin: 1px 2px; }
+    margin: 1px 2px;
+    -webkit-user-select: none; }
 
 #hash-form {
   display: inline-block; }
@@ -93,6 +96,13 @@
   perspective: none; }
   .card-container.flatten-3d.rotateX .card {
     transform-style: flat; }
+
+.card-container.ng-leave {
+  transition: all 0.5s;
+  opacity: 1; }
+  .card-container.ng-leave.ng-leave-active {
+    opacity: 0;
+    transform: translate(200px); }
 
 /* file upload */
 .drop-box {

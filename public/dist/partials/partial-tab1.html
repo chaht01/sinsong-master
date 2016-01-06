@@ -1,44 +1,53 @@
 <ul class="popover shadow popover-right" ng-if="popover.visible" ng-style="{'left':popover.x, 'top':popover.y}">
-    <li ng-click="editNews()">수정</li>
-    <li ng-click="deleteNews()">삭제</li>
+	<li ng-click="editNewsStart()">수정</li>
+	<li ng-click="deleteNewsStart()">삭제</li>
 </ul>
+
+
 <div id="sub">
-    <div class="editor card card-primary" ng-repeat="card in editList" ng-animate="{enter:'animate-enter'}" sin-editor footer="true" type="'edit'" value="card"></div>
+	<div class="editor card card-primary" ng-repeat="card in editList" ng-animate="{enter:'animate-enter'}" sin-editor footer="true" type="'edit'" value="card"></div>
 </div>
+
+
 <div id="main">
-    <div class="editor card card-default">
-        <div class="tabbar"><div card-toolbar></div></div>
-        <div sin-editor sin-submit="submit(todo)"></div>
-    </div>
-    <article class="card-container rotateX" ng-class="{'flatten-3d':todo.edit}" ng-repeat="todo in todos | reverse">
-        <div class="card card-default" ng-class="{'flip':todo.readyToDelete, 'card-in-action shadow':todo.edit}">
-            <div class="figure">
-                <div class="title">
-                    <span>{{$index}}</span>
-                    <a class="options pull-right" ng-if="!todo.edit" ng-click="popoverToggle($event,todo)">
-                        <span class="glyphicons glyphicons-more"></span>
-                    </a>
-                    <a class="options pull-right" ng-if="todo.edit">
-                        <span class="glyphicons glyphicons-ok-2"></span>
-                    </a>
-                    <a class="options pull-right" ng-if="todo.edit">
-                        <span class="glyphicons glyphicons-remove-2"></span>
-                    </a>
-                </div>
-                <div class="body" ng-bind-html="todo.trustText" ng-if="!todo.edit"></div>
-                <div class="body" sin-editor value="todo" ng-if="todo.edit"></div>
-            </div>
-            <div class="figure back">
-                <div class="vert-center">
-                    <a class="close btn" ng-click="undoDelete(todo)"></a>
-                    <span>정말 삭제 하시겠어요?</span>
-                    <div class="txt-center">
-                        <a class="btn"><h2 class="glyphicons glyphicons-ok-2"></h2></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </article>
+	<div class="editor card card-default">
+		<div class="tabbar">
+			<div card-toolbar></div>
+		</div>
+		<div sin-editor sin-submit="addNews(text)"></div>
+	</div>
+	<article class="card-container rotateX" ng-class="{'flatten-3d':news.edit}" ng-repeat="news in newses | reverse" ng-if="!news.deleted" ng-animate="{leave:'animate-leave'}">
+		<div class="card card-default" ng-class="{'flip':news.readyToDelete, 'card-in-action shadow':news.edit}">
+			<div class="figure">
+				<div class="title">
+					<span>{{$index}}</span>
+					<a class="options pull-right" ng-if="!news.edit" ng-click="popoverToggle($event,news)">
+						<span class="glyphicons glyphicons-more"></span>
+					</a>
+					<span ng-if="news.edit" class="pull-right">
+                    	<a class="options">
+                     	   <span class="glyphicons glyphicons-ok-2"></span>
+						</a>
+						<a class="options">
+							<span class="glyphicons glyphicons-remove-2"></span>
+						</a>
+					</span>
+
+				</div>
+				<div class="body" ng-bind-html="news.trustText" ng-if="!news.edit"></div>
+				<div class="body" sin-editor value="news" sinn-submit="editNewsEnd(id, news)" ng-if="news.edit"></div>
+			</div>
+			<div class="figure back">
+				<div class="vert-center">
+					<a class="close btn" ng-click="deleteNewsUndo(news)"></a>
+					<span>정말 삭제 하시겠어요?</span>
+					<div class="txt-center">
+						<a class="btn" ng-click="deleteNewsEnd(news)"><h2 class="glyphicons glyphicons-ok-2"></h2></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</article>
 	<!--  Drop File:
     <div ngf-drop ngf-select ng-model="files" class="drop-box" 
         ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true"
@@ -53,8 +62,8 @@
     <img ngf-src="!files[0].$error && files[0]"> -->
 
 
-    <!-- <input ng-model="text.value" style="width: 400px;"> -->
-    <!-- <input ng-model="hash.typed"> -->
-    <!-- http://jsfiddle.net/MWe8U/ -->
-    <!-- http://jsfiddle.net/lsiv568/fsfPe/10/ -->
+	<!-- <input ng-model="text.value" style="width: 400px;"> -->
+	<!-- <input ng-model="hash.typed"> -->
+	<!-- http://jsfiddle.net/MWe8U/ -->
+	<!-- http://jsfiddle.net/lsiv568/fsfPe/10/ -->
 </div>
