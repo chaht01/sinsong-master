@@ -56,8 +56,6 @@
       .card.card-default .body [contenteditable="true"] {
         background: #fff2a8; }
         .card.card-default .body [contenteditable="true"]:focus {
-          outline: none;
-          border: none;
           background: none; }
         .card.card-default .body [contenteditable="true"]::selection {
           background: #fff2a8; }
@@ -101,6 +99,7 @@
         .card-container.rotateX .card .figure.back h2 {
           margin: 0; }
     .card-container.rotateX .card.flip {
+      transform-style: preserve-3d;
       transform: rotateX(180deg);
       border-bottom: none;
       border-top: 2px solid #de4a3a; }
@@ -108,6 +107,7 @@
         backface-visibility: hidden; }
 
 .typeahead {
+  left: 0;
   height: 0;
   overflow: hidden;
   padding: 1px 2px;

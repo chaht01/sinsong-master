@@ -30,6 +30,7 @@ app
                 function initEditor() {
                     var value;
                     if($scope.value){
+                        console.log($scope.value)
                         value = dummyNode + $scope.value.text;
                     }else{
                         value = dummyNode;
@@ -40,58 +41,68 @@ app
                         caret: {},
                         blured: false,
                         value: value
+                        //
                     };
                 }
                 $scope.pushTodo = function(value) {
                     var text;
                     text = value.replace(dummyNode,'');
                     var obj = {
-                        todo: text // the key name 'todo' must sync with directive's 
-                            //attirbute parameter of function 'submit'.
-                        }
-                        $scope.submit(obj);
+                        todo: text 
+                        /*
+                        the key name 'todo' must sync with directive's 
+                        attirbute parameter of function 'submit'.
+                        */
+                    }
+                    $scope.submit(obj);
+                    if($scope.value){
+                        $scope.value.text = text;
+                        $scope.value.trustText = $sce.trustAsHtml(text);
+                        $scope.value.edit = false;
+                    }else{
                         initEditor();
                     }
-                },
-                template: function($scope){
-                    var footer;
-                    footer = '<button ng-click="pushTodo(editor.value)" ng-disabled="!editor.value">작성완료</button>또는 <span class="emphasize" ng-class="{disabled:!editor.value}"><span class="key">alt</span>+<span class="key">s</span></span>'
-                    return '<div id="note" class="body" sin-note sin-hash="hash" contenteditable="true" ng-focus="finishHash()" ng-blur="finishHash(e)" ng-model="editor.value" autofocus>{{editor.value}}</div>\
-                    <div sin-typeahead sin-hash="hash" class="typeahead block" ng-class="{show:hash.constructed}">\
-                    </div>'
-                },
-                link: function($scope, element, attrs) {
+                }
+            },
+            template: function($scope){
+                var footer;
+                footer = '<button ng-click="pushTodo(editor.value)" ng-disabled="!editor.value">작성완료</button>또는 <span class="emphasize" ng-class="{disabled:!editor.value}"><span class="key">alt</span>+<span class="key">s</span></span>'
+                return '<div id="note" class="body" sin-note sin-hash="hash" contenteditable="true" ng-focus="finishHash()" ng-blur="finishHash(e)" ng-model="editor.value" autofocus>{{editor.value}}</div>\
+                <div sin-typeahead sin-hash="hash" class="typeahead block" ng-class="{show:hash.constructed}">\
+                </div>'
+            },
+            link: function($scope, element, attrs) {
 
-                    var editor = element.find("#note");
-                    editor.bind('keydown', 'alt+s', function(event) {
-                        $scope.pushTodo($scope.editor.value);
-                        event.preventDefault();
-                    })
+                var editor = element.find("#note");
+                editor.bind('keydown', 'alt+s', function(event) {
+                    $scope.pushTodo($scope.editor.value);
+                    event.preventDefault();
+                })
 
-                    $timeout(function(){
-                        placeCaretAtEnd(editor[0]);                        
-                    })
+                $timeout(function(){
+                    placeCaretAtEnd(editor[0]);                        
+                })
 
-                    function placeCaretAtEnd(el) {
-                        el.focus();
-                        if (typeof window.getSelection != "undefined"
-                            && typeof document.createRange != "undefined") {
-                            var range = document.createRange();
-                        range.selectNodeContents(el);
-                        range.collapse(false);
-                        var sel = window.getSelection();
-                        sel.removeAllRanges();
-                        sel.addRange(range);
-                    } else if (typeof document.body.createTextRange != "undefined") {
-                        var textRange = document.body.createTextRange();
-                        textRange.moveToElementText(el);
-                        textRange.collapse(false);
-                        textRange.select();
-                    }
+                function placeCaretAtEnd(el) {
+                    el.focus();
+                    if (typeof window.getSelection != "undefined"
+                        && typeof document.createRange != "undefined") {
+                        var range = document.createRange();
+                    range.selectNodeContents(el);
+                    range.collapse(false);
+                    var sel = window.getSelection();
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                } else if (typeof document.body.createTextRange != "undefined") {
+                    var textRange = document.body.createTextRange();
+                    textRange.moveToElementText(el);
+                    textRange.collapse(false);
+                    textRange.select();
                 }
             }
-        };
-    })
+        }
+    };
+})
 .directive("sinTypeahead", function($filter) {
     return {
         restrict: "A",

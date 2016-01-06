@@ -89,6 +89,11 @@
       opacity: 1;
       transform: rotate(0deg) translate(0px); }
 
+.card-container.flatten-3d.rotateX {
+  perspective: none; }
+  .card-container.flatten-3d.rotateX .card {
+    transform-style: flat; }
+
 /* file upload */
 .drop-box {
   height: 100%; }

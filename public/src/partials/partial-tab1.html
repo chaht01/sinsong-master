@@ -10,7 +10,7 @@
         <div class="tabbar"><div card-toolbar></div></div>
         <div sin-editor sin-submit="submit(todo)"></div>
     </div>
-    <article class="card-container rotateX" ng-repeat="todo in todos | reverse">
+    <article class="card-container rotateX" ng-class="{'flatten-3d':todo.edit}" ng-repeat="todo in todos | reverse">
         <div class="card card-default" ng-class="{'flip':todo.readyToDelete, 'card-in-action shadow':todo.edit}">
             <div class="figure">
                 <div class="title">

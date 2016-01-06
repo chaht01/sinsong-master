@@ -8,6 +8,7 @@ angular.module('certApp')
         angular.forEach($scope.todos, function(todo, key){
             todo.trustText = $sce.trustAsHtml(todo.text)
         });
+
         $scope.editList =[];
         $scope.submit = function(todo) {
             $scope.todos.push({
@@ -24,24 +25,27 @@ angular.module('certApp')
             model:null,
             event:null
         }
+        /*
         $scope.card = {
             visible:false,
             model:null
         }
-
-        $scope.popoverToggle = function($event,todo){
+        */
+        $scope.popoverToggle = function($event,news){
             $event.stopPropagation();
             $event.preventDefault();
             $rootScope.rootPopover = $scope.popover;
-            if(todo==$scope.popover.model){
+
+
+            if(news==$scope.popover.model){
                 $scope.popover.visible = !$scope.popover.visible;
             }else{
-                $scope.popover.model = todo;
-                $scope.popover.event = $event;
+                $scope.popover.model = news;
                 $scope.popover.visible = true;
-                $scope.popover.x = $($event.currentTarget).offset().left+$($event.currentTarget).width();
-                $scope.popover.y = $($event.currentTarget).offset().top+$($event.currentTarget).height();
             }
+            $scope.popover.event = $event;
+            $scope.popover.x = $($event.currentTarget).offset().left+$($event.currentTarget).width();
+            $scope.popover.y = $($event.currentTarget).offset().top+$($event.currentTarget).height();    
         }
 
 
@@ -76,13 +80,13 @@ angular.module('certApp')
          * edit news related function
          * edit & confirm & undo
          */
-        
-        $scope.editNews = function(){
+
+         $scope.editNews = function(){
             $scope.popover.model.edit = true;
             // $scope.editList.push($scope.popover.model);
         }
-     }
-     ]);
+    }
+    ]);
 
 /**
  * dom element를 현재 cursor caret 위치에 삽입

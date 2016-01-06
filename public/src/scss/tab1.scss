@@ -6,8 +6,8 @@
 	}
 	[contenteditable="true"]{
 		&:focus{
-		border:none;
-		outline:none;
+			border:none;
+			outline:none;
 		}
 		&::selection{
 			background:#fff2a8;
@@ -112,7 +112,16 @@
 		}
 	}
 }
-
+.card-container{
+	&.flatten-3d{
+		&.rotateX{
+			perspective: none;
+			.card{
+				transform-style: flat;
+			}
+		}
+	}
+}
 
 
 
