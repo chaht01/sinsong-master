@@ -59,7 +59,8 @@
  		.body{
  			-webkit-user-select: initial;
  			padding: 10px;
- 			&::selection{
+ 			&::selection,
+			*::selection{
  				background:#fff2a8;
  			}
  			[contenteditable="true"]{

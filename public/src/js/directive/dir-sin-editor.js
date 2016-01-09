@@ -55,25 +55,19 @@ app
 							attirbute parameter of function 'submit'.
 							*/
 					}
-
-					$scope.submit(obj);
-
-					if (isEditing) {
-						$scope.value.text = htmlText;
-						$scope.value.trustText = $sce.trustAsHtml(htmlText);
-						$scope.value.edit = false;
-					} else {
-						initEditor();
+					if (obj.text.length !== 0) {
+						$scope.submit(obj);
+						if (isEditing) {
+							$scope.value.text = htmlText;
+							$scope.value.trustText = $sce.trustAsHtml(htmlText);
+							$scope.value.edit = false;
+						} else {
+							initEditor();
+						}
 					}
 				}
 			},
-			template: function ($scope) {
-				var footer;
-				footer = '<button ng-click="pushTodo(editor.value)" ng-disabled="!editor.value">작성완료</button>또는 <span class="emphasize" ng-class="{disabled:!editor.value}"><span class="key">alt</span>+<span class="key">s</span></span>'
-				return '<div id="note" class="body" sin-note sin-hash="hash" contenteditable="true" ng-focus="finishHash()" ng-blur="finishHash(e)" ng-model="editor.value" autofocus>{{editor.value}}</div>\
-                <div sin-typeahead sin-hash="hash" class="typeahead block" ng-class="{show:hash.constructed}">\
-                </div>'
-			},
+			templateUrl: '/partials/partial-editor-body.html',
 			link: function ($scope, element, attrs) {
 
 				var editor = element.find("#note");
@@ -85,23 +79,6 @@ app
 				$timeout(function () {
 					placeCaretAtEnd(editor[0]);
 				})
-
-				function placeCaretAtEnd(el) {
-					el.focus();
-					if (typeof window.getSelection != "undefined" && typeof document.createRange != "undefined") {
-						var range = document.createRange();
-						range.selectNodeContents(el);
-						range.collapse(false);
-						var sel = window.getSelection();
-						sel.removeAllRanges();
-						sel.addRange(range);
-					} else if (typeof document.body.createTextRange != "undefined") {
-						var textRange = document.body.createTextRange();
-						textRange.moveToElementText(el);
-						textRange.collapse(false);
-						textRange.select();
-					}
-				}
 			}
 		};
 	})
@@ -147,11 +124,7 @@ app
 				};
 
 			},
-			template: '<ul class="typeahead-list">\
-        <li ng-class="{active:$index==focusIndex}" ng-mouseover="hoverIndex($index)" ng-mousedown="submitByClick($index,$event)"\
-        ng-repeat="result in filteredResult"><span>{{result.name}}</span></li>\
-        <li ng-if="filteredResult.length==0">결과가 없습니다</li>\
-        </ul>',
+			templateUrl: 'partials/partial-typeahead.html',
 			link: function ($scope, element, attrs) {
 				var hashInput = $scope.hash.ele;
 				hashInput
@@ -194,7 +167,6 @@ app
 				}
 
 				ngModel.$render = function () {
-					// element.html($sce.getTrustedHtml(ngModel.$viewValue || ""));
 					element.html(ngModel.$viewValue || "");
 				};
 
@@ -230,10 +202,10 @@ app
 
 				$scope.$watch('hash.typed', function () {
 					if ($scope.hash.constructed) {
-						if ($scope.hash.typed.length == 0) {
+						if ($scope.hash.typed.length === 0) {
 							$scope.finishHash();
 						} else {
-							if ($scope.hash.typed.substring(0, 1) != hashChar) {
+							if ($scope.hash.typed.charAt(0) !== hashChar) {
 								$scope.finishHash();
 							}
 						}
@@ -254,21 +226,26 @@ app
 
 				$scope.finishHash = function () {
 					if ($scope.hash.constructed && !$scope.hash.hashing) {
-						$scope.hash.hashing = true;
+						$scope.hash.hashing = true; //start hashing process
 						if (!$scope.hash.submit) {
 							replaceHashWith($scope.hash.typed);
 						} else {
 							$scope.users.push($scope.hash.submit);
-							hashInputTyped = angular.element('<input value=' + $scope.users[$scope.users.length - 1].typed + ' class="hash-input readonly" readonly>');
-							replaceHashWith(hashInputTyped);
-							hashInputTyped.autoGrowInput({
-								minWidth: 10,
-								comfortZone: 0
-							});
-							hashInputTyped.next('span').remove();
-							hashInputTyped.next('span').remove();
+							hashInputTyped = angular.element('<input value=' +
+								$scope.users[$scope.users.length - 1].typed +
+								' class="hash-input readonly" readonly>');
+							replaceHashWith(hashInputTyped,
+								function () {
+									hashInputTyped.autoGrowInput({
+										minWidth: 10,
+										comfortZone: 0
+									});
+									hashInputTyped.next('span').remove();
+									hashInputTyped.next('span').remove();
+								});
+
 						}
-						$scope.hash.hashing = false;
+						$scope.hash.hashing = false; //end hashing process
 					}
 				};
 
@@ -283,8 +260,22 @@ app
 					};
 				};
 
-				function replaceHashWith(ele) {
-					hashInput.before(ele);
+				function replaceHashWith(ele, callback) {
+					$timeout(function () {
+						if (typeof ele.get !== 'function' &&
+							typeof ele === 'string') { //if ele is string
+							insertTextAtCursor(ele);
+						} else if (typeof ele.get === 'function') {
+							if (ele.get(0).nodeType === 1) { //if ele's nodetype is element
+								insertNodeAtCursor(ele.get(0))
+							}
+						}
+					}).then(function () {
+						if (typeof callback !== 'undefined') {
+							callback();
+						}
+					})
+
 					destroyHash();
 					initHash();
 				};
