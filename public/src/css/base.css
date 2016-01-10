@@ -74,3 +74,6 @@ a.btn {
   -moz-osx-font-smoothing: grayscale; }
   .close::before {
     content: "\E208"; }
+
+.hidden {
+  display: none !important; }

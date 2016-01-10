@@ -7,12 +7,16 @@ app
 		return {
 			restrict: "A",
 			scope: {
+				entries: "=sinEntries",
 				submit: "&sinSubmit",
 				footer: "=footer",
 				type: "=type",
-				value: "=value"
+				value: "=value",
+				class: "=sinClass",
+				autofocus: "=sinAutofocus"
 			},
 			controller: function ($scope, $sce) {
+				console.log($scope.entries)
 				$scope.users = [];
 				$scope.editor;
 				$scope.hash = {
@@ -36,8 +40,6 @@ app
 					} else {
 						contents = dummyCvtStringToSafeHtml;
 					}
-
-
 					$scope.editor = {
 						caret: {},
 						blured: false,
@@ -45,13 +47,14 @@ app
 							//
 					};
 				}
-				$scope.pushTodo = function (htmlText) {
+				$scope.pushEntry = function (htmlText) {
 					htmlText = htmlText.replace(dummyCvtStringToSafeHtml, '');
 					var obj = {
 						id: $scope.value ? $scope.value.id : undefined,
-						text: htmlText
+						text: htmlText,
+						model: $scope.entries ? $scope.entries : undefined
 							/*
-							the key name 'todo' must sync with directive's 
+							the key names (eg.'text') must sync with directive's 
 							attirbute parameter of function 'submit'.
 							*/
 					}
@@ -72,13 +75,15 @@ app
 
 				var editor = element.find("#note");
 				editor.bind('keydown', 'alt+s', function (event) {
-					$scope.pushTodo($scope.editor.value);
+					$scope.pushEntry($scope.editor.value);
 					event.preventDefault();
 				})
 
+				if($scope.autofocus){
 				$timeout(function () {
 					placeCaretAtEnd(editor[0]);
 				})
+				}
 			}
 		};
 	})

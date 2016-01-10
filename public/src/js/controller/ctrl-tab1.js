@@ -7,13 +7,17 @@ angular.module('certApp')
 			$scope.newses = News.get();
 			angular.forEach($scope.newses, function(news,index){
 				news.trustText = $sce.trustAsHtml(news.text);
+				angular.forEach(news.comments, function(comment,index){
+					comment.trustContext = $sce.trustAsHtml(comment.context);
+				})
 			})
 			$scope.editList = [];
-			$scope.addNews = function (text) {
-				$scope.newses.push({
+			$scope.addNews = function (text,model) {
+				model.push({
 					text: text,
 					trustText: $sce.trustAsHtml(text),
-					edit: false
+					edit: false,
+					comments:[]
 				});
 			};
 
@@ -92,6 +96,14 @@ angular.module('certApp')
 			$scope.editNewsStart = function () {
 				$scope.popover.model.edit = true;
 //				$scope.editList.push($scope.popover.model);
+			}
+			
+			$scope.addComment = function(text, model){
+				model.push({
+					name: '테스트',
+					context: text,
+					trustContext: $sce.trustAsHtml(text)
+				});
 			}
       }
       ]);

@@ -50,7 +50,7 @@
           color: #c1c1c7; }
     .card.card-default .body {
       -webkit-user-select: initial;
-      padding: 10px; }
+      padding: 16px 10px 26px; }
       .card.card-default .body::selection,
       .card.card-default .body *::selection {
         background: #fff2a8; }
@@ -60,6 +60,22 @@
           background: none; }
         .card.card-default .body [contenteditable="true"]::selection {
           background: #fff2a8; }
+    .card.card-default .comments {
+      -webkit-user-select: none;
+      padding: 8px 13px;
+      border-top: 2px solid #f1f1f5;
+      background: #f6f6f9; }
+      .card.card-default .comments .comment-input {
+        min-height: 30px;
+        padding: 4px 8.2px;
+        background: #ffffff;
+        border: 1px solid #e6e6eb; }
+      .card.card-default .comments [contenteditable="true"]:focus {
+        outline: none;
+        border: none; }
+      .card.card-default .comments .comment {
+        font-size: 12px;
+        margin-bottom: 12px; }
   .card.card-in-action {
     border-left: 4px solid #F9BF3B; }
   .card .tabbar {
@@ -99,11 +115,13 @@
           vertical-align: middle; }
         .card-container.rotateX .card .figure.back h2 {
           margin: 0; }
+      .card-container.rotateX .card .figure * {
+        backface-visibility: hidden !important; }
     .card-container.rotateX .card.flip {
       transform-style: preserve-3d;
       transform: rotateX(180deg); }
       .card-container.rotateX .card.flip * {
-        backface-visibility: hidden; }
+        backface-visibility: hidden !important; }
 
 .typeahead {
   left: 0;
