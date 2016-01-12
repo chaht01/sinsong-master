@@ -10,7 +10,7 @@ app
 				entries: "=sinEntries",
 				submit: "&sinSubmit",
 				value: "=value",
-				class: "=sinClass",
+				class: "@sinClass",
 				autofocus: "=sinAutofocus",
 				editorFocused: "&sinFocused",
 				editorBlured: "&sinBlured"
@@ -95,6 +95,7 @@ app
 				})
 				
 				if ($scope.autofocus) {
+					console.log($scope.autofocus)
 					focusEditor();
 				}
 				
