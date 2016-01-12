@@ -16,7 +16,7 @@
 		</div>
 		<div sin-editor sin-class="'body'" sin-entries="newses" sin-submit="addNews(text,model)" sin-autofocus="true"></div>
 	</div>
-	<article class="card-container rotateX" ng-class="{'flatten-3d':news.edit}" ng-repeat="news in newses | reverse" ng-if="!news.deleted" ng-animate="{leave:'animate-leave'}">
+	<article class="card-container rotateX" ng-class="{'flatten-3d':news.edit||news.focused}" ng-repeat="news in newses | reverse" ng-if="!news.deleted" ng-animate="{leave:'animate-leave'}">
 		<div class="card card-default" ng-class="{'flip':news.readyToDelete, 'card-in-action shadow':news.edit}">
 			<div class="figure">
 				<div class="title">
@@ -36,14 +36,14 @@
 				</div>
 				<div class="body" ng-bind-html="news.trustText" ng-if="!news.edit"></div>
 				<div class="body" sin-editor sin-class="" value="news" sinn-submit="editNewsEnd(id, news)" ng-if="news.edit" sin-autofocus="true"></div>
-				<div class="comments" ng-if="!news.edit">
+				<div class="comments">
 					<ul>
 						<li class="comment" ng-repeat="comment in news.comments">
 							<figure class="thumbnail">{{comment.name}}</figure>
 							<span ng-bind-html="comment.trustContext"></span>
 						</li>
 					</ul>
-					<div sin-editor class="comment-input" sin-entries="news.comments" sin-submit="addComment(text,model)"></div>
+					<div sin-editor sin-focused="commentFocused(model)" sin-blured="commentBlured(model)" class="comment-input" sin-entries="news.comments" sin-submit="addComment(text,model)"></div>
 				</div>
 			</div>
 			<div class="figure back">

@@ -5,22 +5,24 @@ angular.module('certApp')
 	function ($scope, $sce, $rootScope, News) {
 
 			$scope.newses = News.get();
+		
 			angular.forEach($scope.newses, function(news,index){
 				news.trustText = $sce.trustAsHtml(news.text);
+				news.comments = new selfReferenceArray(news,news.comments);
 				angular.forEach(news.comments, function(comment,index){
 					comment.trustContext = $sce.trustAsHtml(comment.context);
 				})
 			})
 			$scope.editList = [];
 			$scope.addNews = function (text,model) {
-				model.push({
+				var obj = {
 					text: text,
 					trustText: $sce.trustAsHtml(text),
-					edit: false,
-					comments:[]
-				});
+					edit: false
+				};
+				obj.comments = new selfReferenceArray(obj);
+				model.push(obj);
 			};
-
 			$scope.editNewsEnd = function (id, news) {
 				News.edit({
 					id: id,
@@ -105,6 +107,25 @@ angular.module('certApp')
 					trustContext: $sce.trustAsHtml(text)
 				});
 			}
+			
+			/**
+			 * comment focus / blur
+			 */
+			$scope.commentFocused = function(model){model.callParent().focused = true;}
+			$scope.commentBlured = function(model){model.callParent().focused = false;}
       }
       ]);
+
+function selfReferenceArray(parent, arr){
+	'use strict';
+	this.callParent = function(){
+		return parent;
+	}
+	if(typeof arr !== 'undefined'){
+		for(var i=0; i<arr.length; i++){
+			this.push(arr[i]);
+		}
+	}
+}
+selfReferenceArray.prototype = Array.prototype;
 

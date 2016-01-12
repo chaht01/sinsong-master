@@ -9,14 +9,13 @@ app
 			scope: {
 				entries: "=sinEntries",
 				submit: "&sinSubmit",
-				footer: "=footer",
-				type: "=type",
 				value: "=value",
 				class: "=sinClass",
-				autofocus: "=sinAutofocus"
+				autofocus: "=sinAutofocus",
+				editorFocused: "&sinFocused",
+				editorBlured: "&sinBlured"
 			},
 			controller: function ($scope, $sce) {
-				console.log($scope.entries)
 				$scope.users = [];
 				$scope.editor;
 				$scope.hash = {
@@ -27,7 +26,6 @@ app
 					inCaret: false,
 					hashing: false
 				};
-
 				var dummyCvtStringToSafeHtml = '<span class="fn-dummy-safe"></span>';
 				var isEditing = $scope.value;
 				initEditor();
@@ -69,6 +67,22 @@ app
 						}
 					}
 				}
+				
+				$scope.getFocus = function(){
+					var obj = {
+						model: $scope.entries ? $scope.entries : undefined
+					}
+					$scope.editorFocused(obj);
+					$scope.isFocused = true;
+				};
+				
+				$scope.loseFocus = function(){
+					var obj = {
+						model: $scope.entries ? $scope.entries : undefined
+					}
+					$scope.editorBlured(obj);
+					$scope.isFocused = false;
+				}
 			},
 			templateUrl: '/partials/partial-editor-body.html',
 			link: function ($scope, element, attrs) {
@@ -76,18 +90,178 @@ app
 				var editor = element.find("#note");
 				editor.bind('keydown', 'alt+s', function (event) {
 					$scope.pushEntry($scope.editor.value);
+					focusEditor();
 					event.preventDefault();
 				})
-
-				if($scope.autofocus){
-				$timeout(function () {
-					placeCaretAtEnd(editor[0]);
-				})
+				
+				if ($scope.autofocus) {
+					focusEditor();
+				}
+				
+				function focusEditor(){
+					$timeout(function () {
+						if($scope.value){
+							placeCaretAtEnd(editor[0]);
+						}else{
+							placeCaretAtStart(editor[0])
+						}
+					})
 				}
 			}
 		};
 	})
-	.directive("sinTypeahead", function ($filter) {
+	.directive("sinNote", function ($compile, $timeout, $sce) {
+		return {
+			restrict: "A",
+			require: "ngModel",
+			scope: {
+				hash: "=sinHash",
+				isFocused: "=sinFocused",
+				isBlured: "=sinBlured"
+			},
+			controller: function ($scope) {
+				$scope.users = [];
+			},
+			link: function ($scope, element, attrs, ngModel) {
+
+				function read() {
+					setTimeout(function () {
+						ngModel.$setViewValue(element.html());
+					}, 100)
+				}
+				ngModel.$render = function () {
+					element.html(ngModel.$viewValue || "");
+				};
+
+				var
+					hashInput = $scope.hash.ele,
+					hashInputTyped,
+					editor = element,
+					hashChar = '@';
+
+				editor
+					.bind("blur keyup change", function () {
+						$scope.$apply(read);
+						// $scope.$evalAsync(read)
+					})
+					.bind('keydown', 'shift+2', function (event) {
+						if (!$scope.hash.constructed) {
+							insertNodeAtCursor(hashInput.get(0));
+							hashInput
+								.autoGrowInput({
+									minWidth: 10,
+									comfortZone: 10
+								}).focus();
+							$scope.hash.constructed = true;
+							$compile(hashInput)($scope);
+						}
+					});
+
+				hashInput
+					.bind('keydown', 'space esc', function (e) {
+						$scope.finishHash();
+						e.preventDefault();
+					});
+
+				$scope.$watch('hash.typed', function () {
+					if ($scope.hash.constructed) {
+						if ($scope.hash.typed.length === 0) {
+							$scope.finishHash();
+						} else {
+							if ($scope.hash.typed.charAt(0) !== hashChar) {
+								$scope.finishHash();
+							}
+						}
+					}
+				});
+
+				$scope.$watch('hash.inCaret', function (newValue, oldValue, scope) {
+					if (!newValue) {
+						$scope.finishHash();
+					}
+				});
+
+				$scope.$watch('hash.submit', function (newValue) {
+					if (newValue) {
+						$scope.finishHash();
+					}
+				})
+				
+				$scope.$watch('isFocused',function(newValue){
+					$scope.finishHash();
+				})
+				
+				$scope.finishHash = function () {
+					if ($scope.hash.constructed && !$scope.hash.hashing) {
+						$scope.hash.hashing = true; //start hashing process
+						if (!$scope.hash.submit) {
+							replaceHashWith($scope.hash.typed);
+						} else {
+							$scope.users.push($scope.hash.submit);
+							hashInputTyped = angular.element('<input value=' +
+								$scope.users[$scope.users.length - 1].typed +
+								' class="hash-input readonly" readonly>');
+							replaceHashWith(hashInputTyped,
+
+								function () {
+									hashInputTyped.autoGrowInput({
+										minWidth: 10,
+										comfortZone: 0
+									});
+									hashInputTyped.next('span').remove();
+									hashInputTyped.next('span').remove();
+								});
+
+						}
+						$scope.hash.hashing = false; //end hashing process
+					}
+				};
+
+				function initHash() {
+					$scope.hash = {
+						ele: angular.element('<input ng-model="hash.typed" ng-trim="false" class="hash-input" ng-focus="hash.inCaret=true" ng-blur="hash.inCaret=false" autofocus="true" kr-input>'),
+						typed: '',
+						submit: false,
+						focus: false,
+						inCaret: false,
+						hashing: false
+					};
+				};
+
+				function replaceHashWith(ele, callback) {
+					$timeout(function () {
+						if (typeof ele.get !== 'function' &&
+							typeof ele === 'string') { //if ele is string
+							//							insertTextAtCursor(ele);
+							hashInput.before(ele);
+						} else if (typeof ele.get === 'function') {
+							if (ele.get(0).nodeType === 1) { //if ele's nodetype is element
+								insertNodeAtCursor(ele.get(0))
+							}
+						}
+					}).then(function () {
+						if (typeof callback !== 'undefined') {
+							callback();
+						}
+					})
+
+					destroyHash();
+					initHash();
+				};
+
+				function destroyHash() {
+					$timeout(function () {
+						hashInput.next('span').remove();
+						hashInput = hashInput.detach();
+						$scope.hash.constructed = false;
+						$compile(hashInput)($scope);
+						read();
+					})
+				};
+			}
+		};
+	})
+.directive("sinTypeahead", function ($filter) {
 		return {
 			restrict: "A",
 			require: "^sinEditor",
@@ -152,148 +326,4 @@ app
 					});
 			}
 		}
-	})
-	.directive("sinNote", function ($compile, $timeout, $sce) {
-		return {
-			restrict: "A",
-			require: "ngModel",
-			scope: {
-				hash: "=sinHash"
-			},
-			controller: function ($scope) {
-				$scope.users = [];
-			},
-			link: function ($scope, element, attrs, ngModel) {
-
-				function read() {
-					setTimeout(function () {
-						ngModel.$setViewValue(element.html());
-					}, 100)
-				}
-
-				ngModel.$render = function () {
-					element.html(ngModel.$viewValue || "");
-				};
-
-				var
-					hashInput = $scope.hash.ele,
-					hashInputTyped,
-					editor = element,
-					hashChar = '@';
-
-				editor
-					.bind("blur keyup change", function () {
-						$scope.$apply(read);
-						// $scope.$evalAsync(read)
-					})
-					.bind('keydown', 'shift+2', function (event) {
-						if (!$scope.hash.constructed) {
-							insertNodeAtCursor(hashInput.get(0));
-							hashInput
-								.autoGrowInput({
-									minWidth: 10,
-									comfortZone: 10
-								}).focus();
-							$scope.hash.constructed = true;
-							$compile(hashInput)($scope);
-						}
-					});
-
-				hashInput
-					.bind('keydown', 'space esc', function (e) {
-						$scope.finishHash();
-						e.preventDefault();
-					});
-
-				$scope.$watch('hash.typed', function () {
-					if ($scope.hash.constructed) {
-						if ($scope.hash.typed.length === 0) {
-							$scope.finishHash();
-						} else {
-							if ($scope.hash.typed.charAt(0) !== hashChar) {
-								$scope.finishHash();
-							}
-						}
-					}
-				});
-
-				$scope.$watch('hash.inCaret', function (newValue, oldValue, scope) {
-					if (!newValue) {
-						$scope.finishHash();
-					}
-				});
-
-				$scope.$watch('hash.submit', function (newValue) {
-					if (newValue) {
-						$scope.finishHash();
-					}
-				})
-
-				$scope.finishHash = function () {
-					if ($scope.hash.constructed && !$scope.hash.hashing) {
-						$scope.hash.hashing = true; //start hashing process
-						if (!$scope.hash.submit) {
-							replaceHashWith($scope.hash.typed);
-						} else {
-							$scope.users.push($scope.hash.submit);
-							hashInputTyped = angular.element('<input value=' +
-								$scope.users[$scope.users.length - 1].typed +
-								' class="hash-input readonly" readonly>');
-							replaceHashWith(hashInputTyped,
-								function () {
-									hashInputTyped.autoGrowInput({
-										minWidth: 10,
-										comfortZone: 0
-									});
-									hashInputTyped.next('span').remove();
-									hashInputTyped.next('span').remove();
-								});
-
-						}
-						$scope.hash.hashing = false; //end hashing process
-					}
-				};
-
-				function initHash() {
-					$scope.hash = {
-						ele: angular.element('<input ng-model="hash.typed" ng-trim="false" class="hash-input" ng-focus="hash.inCaret=true" ng-blur="hash.inCaret=false" autofocus="true" kr-input>'),
-						typed: '',
-						submit: false,
-						focus: false,
-						inCaret: false,
-						hashing: false
-					};
-				};
-
-				function replaceHashWith(ele, callback) {
-					$timeout(function () {
-						if (typeof ele.get !== 'function' &&
-							typeof ele === 'string') { //if ele is string
-							insertTextAtCursor(ele);
-						} else if (typeof ele.get === 'function') {
-							if (ele.get(0).nodeType === 1) { //if ele's nodetype is element
-								insertNodeAtCursor(ele.get(0))
-							}
-						}
-					}).then(function () {
-						if (typeof callback !== 'undefined') {
-							callback();
-						}
-					})
-
-					destroyHash();
-					initHash();
-				};
-
-				function destroyHash() {
-					$timeout(function () {
-						hashInput.next('span').remove();
-						hashInput = hashInput.detach();
-						$scope.hash.constructed = false;
-						$compile(hashInput)($scope);
-						read();
-					})
-				};
-			}
-		};
 	})
